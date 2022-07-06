@@ -34,5 +34,6 @@ export interface ItemType {
   } | undefined
   radio_name: number,
   text_name: string
-  upload_ins: string
+  upload_ins: string,
+  id:number
 }

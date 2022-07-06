@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Card, Button, Modal, Input, Radio, Upload, Select, InputNumber, Checkbox } from 'antd';
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 import { OptionsType, ItemType } from '@/pages/user/login/types';
@@ -7,14 +7,46 @@ import styles from './index.module.less';
 const Login = (props: any): JSX.Element => {
   const { showModal, visible, cancelClick, policyFile, handleOk, policyFileDetail } = props;
   const [form] = Form.useForm();
+  // 看看当前的操作是否为编辑操作
+  const isEdit: boolean = Object.keys(policyFileDetail).length > 0;
   // 定义一个变量用来存储当前提交的表单数据
   const onFinish = (value: ItemType) => {
     let newValues = { ...policyFileDetail, ...value };
     let newPolicyFile = JSON.parse(JSON.stringify(policyFile));
-    newPolicyFile.push({ ...newValues });
+    if (isEdit) {
+      let newPoliceFileValue = newPolicyFile.findIndex((ele: ItemType) => ele.id === newValues.id);
+      newPolicyFile.splice(newPoliceFileValue, 1, newValues);
+    } else {
+      newPolicyFile.push({ ...newValues, id: policyFile.length + 1 });
+    }
     handleOk(newPolicyFile);
     cancelClick();
+    // 完成编辑之后，对表单做清空操作
+    restForm();
   };
+  // 迪阿尼
+  const restForm = () => {
+    form.resetFields();
+  };
+
+  useEffect(() => {
+    if (isEdit) {
+      form.setFieldsValue({
+        file_format: policyFileDetail?.file_format,
+        file_type: policyFileDetail?.file_type,
+        files_req: policyFileDetail.files_req,
+        file_limit: policyFileDetail?.file_limit,
+        size: policyFileDetail?.size,
+        num: policyFileDetail?.num,
+
+        radio_name: policyFileDetail?.radio_name,
+        text_name: policyFileDetail?.text_name,
+        upload_ins: policyFileDetail?.upload_ins,
+        id: policyFileDetail?.id,
+      });
+    }
+  });
+
   const options: OptionsType[] = [
     { label: 'word', value: '1' },
     { label: 'excel', value: '2' },
@@ -25,13 +57,13 @@ const Login = (props: any): JSX.Element => {
   ];
   return (
     <Card>
-      <Button
+      {policyFile.length < 5 && <Button
         onClick={() => {
           showModal();
         }}
         className={styles.showModalBtn}
         icon={<PlusOutlined />}
-      >添加</Button>
+      >添加</Button>}
       <Modal
         visible={visible}
         footer={false}
@@ -43,6 +75,7 @@ const Login = (props: any): JSX.Element => {
         <Form
           onFinish={onFinish}
           form={form}
+
         >
           <Form.Item
             label={'字段名称'}
@@ -51,7 +84,6 @@ const Login = (props: any): JSX.Element => {
               required: true,
               message: '请输入字段名称',
             }]}
-
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
@@ -60,7 +92,6 @@ const Login = (props: any): JSX.Element => {
             name={'radio_name'}
             required={true}
             initialValue={1}
-
           >
             <Radio.Group>
               <Radio value={1} defaultChecked={true}>必传</Radio>
@@ -74,6 +105,7 @@ const Login = (props: any): JSX.Element => {
             extra={
               <span style={{ color: '#bfbfba' }}>给用户提供的模版文件</span>
             }
+
           >
             <Upload>
               <Button icon={<UploadOutlined />}>文件上传</Button>
@@ -92,11 +124,13 @@ const Login = (props: any): JSX.Element => {
               required: true,
               message: '请填写上传说明',
             }]}
+
           >
             <Input.TextArea placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             name={'files_req'}
+
           >
             <div style={{ display: 'flex' }}>
               <Form.Item
@@ -106,8 +140,10 @@ const Login = (props: any): JSX.Element => {
                   message: '请选择文件限制',
                 }]}
                 name={['files_req', 'file_limit']}
+
               >
-                <Select style={{ width: 145, marginRight: 10 }}>
+                <Select style={{ width: 145, marginRight: 10 }}
+                >
                   <Select.Option value={1}>不限制上传大小</Select.Option>
                   <Select.Option value={2}>限制上传大小</Select.Option>
                 </Select>
@@ -119,6 +155,7 @@ const Login = (props: any): JSX.Element => {
                   required: true,
                   message: '请输入上传文件的大小',
                 }]}
+
               >
                 <InputNumber placeholder={'请输入'} min={0} max={10} />
               </Form.Item>
@@ -129,6 +166,7 @@ const Login = (props: any): JSX.Element => {
                   required: true,
                   message: '请填写数量',
                 }]}
+
               >
                 <Select style={{ width: 100 }}>
                   <Select.Option value={1}>1</Select.Option>
@@ -140,6 +178,7 @@ const Login = (props: any): JSX.Element => {
           <Form.Item
             label={'文件格式'}
             name={'file_format'}
+
           >
             <Checkbox.Group options={options} />
           </Form.Item>

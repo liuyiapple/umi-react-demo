@@ -38,7 +38,6 @@ const Login = (props: any): JSX.Element => {
         file_limit: policyFileDetail?.file_limit,
         size: policyFileDetail?.size,
         num: policyFileDetail?.num,
-
         radio_name: policyFileDetail?.radio_name,
         text_name: policyFileDetail?.text_name,
         upload_ins: policyFileDetail?.upload_ins,
@@ -124,13 +123,11 @@ const Login = (props: any): JSX.Element => {
               required: true,
               message: '请填写上传说明',
             }]}
-
           >
             <Input.TextArea placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             name={'files_req'}
-
           >
             <div style={{ display: 'flex' }}>
               <Form.Item
@@ -142,9 +139,12 @@ const Login = (props: any): JSX.Element => {
                 name={['files_req', 'file_limit']}
 
               >
-                <Select style={{ width: 145, marginRight: 10 }}
+                <Select
+                  style={{ width: 145, marginRight: 10 }}
+                  placeholder={'请选择'}
                 >
-                  <Select.Option value={1}>不限制上传大小</Select.Option>
+                  <Select.Option value={1}
+                  >不限制上传大小</Select.Option>
                   <Select.Option value={2}>限制上传大小</Select.Option>
                 </Select>
               </Form.Item>
@@ -155,7 +155,7 @@ const Login = (props: any): JSX.Element => {
                   required: true,
                   message: '请输入上传文件的大小',
                 }]}
-
+                initialValue={2}
               >
                 <InputNumber placeholder={'请输入'} min={0} max={10} />
               </Form.Item>
@@ -166,19 +166,27 @@ const Login = (props: any): JSX.Element => {
                   required: true,
                   message: '请填写数量',
                 }]}
-
               >
-                <Select style={{ width: 100 }}>
-                  <Select.Option value={1}>1</Select.Option>
+                <Select
+                  placeholder={'请选择'}
+                  style={{ width: 100 }}
+                >
+                  <Select.Option value={1} key={1}>1</Select.Option>
+                  <Select.Option value={2} key={2}>2</Select.Option>
+                  <Select.Option value={3} key={3}>3</Select.Option>
+                  <Select.Option value={4} key={4}>4</Select.Option>
+                  <Select.Option value={5} key={5}>5</Select.Option>
                 </Select>
               </Form.Item>
             </div>
-
           </Form.Item>
           <Form.Item
             label={'文件格式'}
             name={'file_format'}
-
+            rules={[{
+              required: true,
+              message: '请选择文件格式',
+            }]}
           >
             <Checkbox.Group options={options} />
           </Form.Item>

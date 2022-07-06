@@ -8,7 +8,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 const Login: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
-  const [policyFileDetail, setPolicyFileDetail] = useState({});
+  const [policyFileDetail, setPolicyFileDetail] = useState<ItemType | {}>({});
   const [policyFile, setPolicyFile] = useState<ItemType[]>([]);
   const showModal = () => {
     setVisible(!visible);
@@ -21,7 +21,6 @@ const Login: React.FC = () => {
   const deletePoliceFile = (id: number) => {
     let newPoliceFile = JSON.parse(JSON.stringify(policyFile));
     let policeFileId = newPoliceFile.findIndex((el: ItemType) => el.id === id);
-    console.log(policeFileId);
     newPoliceFile.splice(policeFileId, 1);
     setPolicyFile(newPoliceFile);
 
@@ -30,7 +29,6 @@ const Login: React.FC = () => {
   const editPoliceFile = (id: number) => {
     // console.log(id);
     setVisible(true);
-
   };
 
 
@@ -67,7 +65,7 @@ const Login: React.FC = () => {
           policyFile.length > 0 &&
           policyFile.map((item: ItemType) => {
             return (
-              <div className={styles.fileData}>
+              <div className={styles.fileData} key={item.id}>
                 <div>
                   {item.text_name}
                 </div>
@@ -78,9 +76,9 @@ const Login: React.FC = () => {
                   <EditOutlined
                     style={{ marginRight: 10 }}
                     onClick={() => {
-                      editPoliceFile(item.id)
+                      editPoliceFile(item.id);
                       // console.log(item);
-                      setPolicyFileDetail(item)
+                      setPolicyFileDetail(item);
                     }}
                   />
                   <DeleteOutlined onClick={(e) => {

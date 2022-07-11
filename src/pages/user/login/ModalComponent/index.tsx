@@ -24,7 +24,7 @@ const Login = (props: any): JSX.Element => {
     // 完成编辑之后，对表单做清空操作
     restForm();
   };
-  // 迪阿尼
+  // 清空表单数据
   const restForm = () => {
     form.resetFields();
   };
